@@ -46,5 +46,66 @@ class SignalementController extends Controller
         $signalement->delete();
         return response()->json(['message' => 'Deleted successfully']);
     }
+
+    // Get authenticated user's signalements
+    public function mySignalements()
+    {
+        $signalements = Signalement::where('user_id', Auth::id())
+            ->latest()
+            ->get();
+        return SignalementResource::collection($signalements);
+    }
+
+    // Search signalements
+    public function search(Request $request)
+    {
+        $query = Signalement::query();
+
+        if ($request->has('type')) {
+            $query->where('type', $request->type);
+        }
+
+        if ($request->has('status')) {
+            $query->where('status', $request->status);
+        }
+
+        if ($request->has('search')) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%")
+                  ->orWhere('location', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->has('date_from')) {
+            $query->where('date_loss', '>=', $request->date_from);
+        }
+
+        if ($request->has('date_to')) {
+            $query->where('date_loss', '<=', $request->date_to);
+        }
+
+        $signalements = $query->latest()->get();
+        return SignalementResource::collection($signalements);
+    }
+
+    // Get signalements by status
+    public function byStatus($status)
+    {
+        $signalements = Signalement::where('status', $status)
+            ->latest()
+            ->get();
+        return SignalementResource::collection($signalements);
+    }
+
+    // Get signalements by type
+    public function byType($type)
+    {
+        $signalements = Signalement::where('type', $type)
+            ->latest()
+            ->get();
+        return SignalementResource::collection($signalements);
+    }
 }
 

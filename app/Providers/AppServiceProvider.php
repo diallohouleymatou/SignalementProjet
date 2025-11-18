@@ -24,5 +24,8 @@ class AppServiceProvider extends ServiceProvider
     {
         // Register policies
         Gate::policy(Signalement::class, SignalementPolicy::class);
+        Gate::policy(\App\Modules\Comment\Models\Comment::class, \App\Policies\CommentPolicy::class);
+        Gate::policy(\App\Modules\Message\Models\Message::class, \App\Policies\MessagePolicy::class);
+        Gate::policy(\App\Modules\Report\Models\Report::class, \App\Policies\ReportPolicy::class);
     }
 }

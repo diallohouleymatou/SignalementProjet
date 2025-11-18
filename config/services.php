@@ -35,4 +35,17 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Geocoding Service
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for geocoding services
+    |
+    */
+    'geocoding' => [
+        'provider' => env('GEOCODING_PROVIDER', 'nominatim'), // nominatim (free) or google
+        'api_key' => env('GOOGLE_MAPS_API_KEY', ''),
+    ],
+
 ];
